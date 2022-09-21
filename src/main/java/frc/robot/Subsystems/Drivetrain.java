@@ -26,7 +26,7 @@ public class Drivetrain {
     private static RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
     private static RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
 
-    private static DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+    private static DifferentialDrive diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
     private static DoubleSolenoid shifter = new DoubleSolenoid(2, solenoidType, kShiftUp, kShiftDown);
 
     private static PigeonIMU _pigeon;
@@ -77,12 +77,12 @@ public class Drivetrain {
          * @param turnPower the left/right rotation
          */
         public static void arcadeDrive(Double forwardPower, Double turnPower) {
-                driveTrain.arcadeDrive(forwardPower, turnPower);
+                diffDrive.arcadeDrive(forwardPower, turnPower);
         }
 
         /** a tank drive method */
         public static void tankDrive(Double leftPower, Double rightPower) {
-                driveTrain.tankDrive(leftPower, rightPower);
+                diffDrive.tankDrive(leftPower, rightPower);
         }
 
         public static boolean highGear = false;

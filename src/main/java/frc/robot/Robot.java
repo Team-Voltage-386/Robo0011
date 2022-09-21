@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.Routines.DriverRoutine;
+import frc.robot.Routines.RoutineBase;
 import frc.robot.Subsystems.Drivetrain;
 
 /**
@@ -16,20 +18,41 @@ import frc.robot.Subsystems.Drivetrain;
  * package after creating this project, you must also update the build.gradle file in the project.
  */
 public class Robot extends RobotBase {
+
+  private int mode = 0;
+  private RoutineBase[] disabledRoutines = new RoutineBase[0];
+  private RoutineBase[] autonomousRoutines = new RoutineBase[0];
+  private RoutineBase[] teleopRoutines = new RoutineBase[0];
+
+
   public void robotInit() {
+    // init subsystems here
     Drivetrain.init();
+
+    // instance routines here
+    DriverRoutine.inst();
+
+    // declare routine groups here
+    teleopRoutines = {DriverRoutine.act};
+  }
+  public void robotPeriodic() {
+    Drivetrain.update();
   }
 
-  public void disabled() {}
+  public void disabledInit() {}
+  public void disabledPeriodic() {}
 
-  public void autonomous() {}
+  public void autonomousInit() {}
+  public void autonomousPeriodic() {}
 
-  public void teleop() {}
+  public void teleopInit() {}
+  public void teleopPeriodic() {}
 
   public void test() {}
 
-  private volatile boolean m_exit;
 
+
+  private volatile boolean m_exit;
   @Override
   public void startCompetition() {
     robotInit();
@@ -39,38 +62,26 @@ public class Robot extends RobotBase {
 
     while (!Thread.currentThread().isInterrupted() && !m_exit) {
       if (isDisabled()) {
-        DriverStation.inDisabled(true);
-        disabled();
-        DriverStation.inDisabled(false);
-        while (isDisabled()) {
-          DriverStation.waitForData();
+        if (mode != 0) {
+          disabledInit();
+          mode = 0;
         }
+        disabledPeriodic();
       } else if (isAutonomous()) {
-        DriverStation.inAutonomous(true);
-        autonomous();
-        DriverStation.inAutonomous(false);
-        while (isAutonomousEnabled()) {
-          DriverStation.waitForData();
+        if (mode != 1) {
+          autonomousInit();
+          mode = 1;
         }
-      } else if (isTest()) {
-        LiveWindow.setEnabled(true);
-        Shuffleboard.enableActuatorWidgets();
-        DriverStation.inTest(true);
-        test();
-        DriverStation.inTest(false);
-        while (isTest() && isEnabled()) {
-          DriverStation.waitForData();
+        autonomousPeriodic();
+      } else if (isTeleop()) {
+        if (mode != 2) {
+          teleopInit();
+          mode = 2;
         }
-        LiveWindow.setEnabled(false);
-        Shuffleboard.disableActuatorWidgets();
-      } else {
-        DriverStation.inTeleop(true);
-        teleop();
-        DriverStation.inTeleop(false);
-        while (isTeleopEnabled()) {
-          DriverStation.waitForData();
-        }
+        teleopPeriodic();
       }
+      robotPeriodic();
+      Scheduler.execute();
     }
   }
 

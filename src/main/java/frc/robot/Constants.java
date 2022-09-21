@@ -8,6 +8,7 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import static frc.robot.Utils.*;
 
@@ -26,6 +27,9 @@ import static frc.robot.Utils.*;
 public final class Constants {
     /** the indexes to address buttons on the controller */
     public static final class ControllerConstants {
+        public static final Joystick driverController = new Joystick(0);
+        public static final Joystick manipulatorController = new Joystick(1);
+
         public static final int kLeftVertical = 1;
         public static final int kRightVertical = 5;
         public static final int kLeftHorizontal = 0;
