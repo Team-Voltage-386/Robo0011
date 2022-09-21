@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+/** a static drivetrain class that fixes issues caused by using dynamic typing for this sort of thing */
 public class Drivetrain {
-
     private static CANSparkMax frontLeftMotor = new CANSparkMax(kFrontLeft, MotorType.kBrushless);
     private static CANSparkMax frontRightMotor = new CANSparkMax(kFrontRight, MotorType.kBrushless);
     private static CANSparkMax rearLeftMotor = new CANSparkMax(kRearLeft, MotorType.kBrushless);

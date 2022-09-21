@@ -5,27 +5,28 @@
 package frc.robot;
 
 import edu.wpi.first.hal.HAL;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Routines.DriverRoutine;
 import frc.robot.Routines.Routine;
 import frc.robot.Subsystems.Drivetrain;
 
 /**
- * The VM is configured to automatically run this class. If you change the name of this class or the
- * package after creating this project, you must also update the build.gradle file in the project.
+ * The Routine-Based Main Robot Class
+ * @author Carl C
  */
 public class Robot extends RobotBase {
 
-  private int mode = 0;
+  private int mode = 0; // keeps track of last mode to operate init functions
+
+  // the routine arrays for each mode
   private Routine[] disabledRoutines = new Routine[0];
   private Routine[] autonomousRoutines = new Routine[0];
   private Routine[] teleopRoutines = new Routine[0];
   private Routine[] enabledRoutines = new Routine[0];
+  private Routine[] universalRoutines = new Routine[0];
 
 
+  /** run on boot */
   public void robotInit() {
     // init subsystems here
     Drivetrain.init();
@@ -34,8 +35,11 @@ public class Robot extends RobotBase {
     DriverRoutine.inst();
 
     // declare routine groups here
-    teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, DriverRoutine.act);
+    teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, DriverRoutine.act); // add each new routine like this
+
+    Scheduler.addRoutines(universalRoutines);
   }
+  /** run every cycle */
   public void robotPeriodic() {
     // subsystems update
     Drivetrain.update();
@@ -44,6 +48,7 @@ public class Robot extends RobotBase {
     
   }
 
+  /** runs once when disabled */
   public void disabledInit() {
     Scheduler.removeRoutines(autonomousRoutines);
     Scheduler.removeRoutines(teleopRoutines);
@@ -52,11 +57,13 @@ public class Robot extends RobotBase {
     // custom init code after scheduler calls
 
   }
+  /** runs every cycle when disabled */
   public void disabledPeriodic() {
     // custom code here
     
   }
 
+  /** runs once when auto is enabled */
   public void autonomousInit() {
     Scheduler.removeRoutines(disabledRoutines);
     Scheduler.removeRoutines(teleopRoutines);
@@ -65,11 +72,13 @@ public class Robot extends RobotBase {
     // custom init code after scheduler calls
     
   }
+  /** runs every cycle when auto is enabled */
   public void autonomousPeriodic() {
     // custom code here
     
   }
 
+  /** runs once when teleop is enabled */
   public void teleopInit() {
     Scheduler.removeRoutines(disabledRoutines);
     Scheduler.removeRoutines(autonomousRoutines);
@@ -78,6 +87,7 @@ public class Robot extends RobotBase {
     // custom init code after scheduler calls
     
   }
+  /** runs every cycle when teleop is enabled */
   public void teleopPeriodic() {
     // custom code here
 
@@ -91,7 +101,7 @@ public class Robot extends RobotBase {
     // Tell the DS that the robot is ready to be enabled
     HAL.observeUserProgramStarting();
 
-    while (!Thread.currentThread().isInterrupted() && !m_exit) {
+    while (!Thread.currentThread().isInterrupted() && !m_exit) { // while the code has not errored out or been told to stop by DS keep going
       if (isDisabled()) {
         if (mode != 0) {
           disabledInit();
@@ -111,7 +121,7 @@ public class Robot extends RobotBase {
         }
         teleopPeriodic();
       }
-      robotPeriodic();
+      robotPeriodic(); // run the periodic and the scheduler
       Scheduler.execute();
     }
   }
