@@ -5,7 +5,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Subsystems.Drivetrain;
 
-public class DriverRoutine extends RoutineBase {
+public class DriverRoutine extends Routine {
 
     public static DriverRoutine act;
     
@@ -14,6 +14,7 @@ public class DriverRoutine extends RoutineBase {
 
     public DriverRoutine() {
         this.execOrder = 1;
+        this.info = "Routine that handles driver input";
         controller = driverController;
     }
 

@@ -49,8 +49,4 @@ public class Utils {
     public static interface doubAlgB {
         double get(double a, double b);
     }
-
-    public static <T>[] addArray(T[], T) {
-        
-    }
 }

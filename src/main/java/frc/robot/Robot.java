@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Routines.DriverRoutine;
-import frc.robot.Routines.RoutineBase;
+import frc.robot.Routines.Routine;
 import frc.robot.Subsystems.Drivetrain;
 
 /**
@@ -20,9 +20,10 @@ import frc.robot.Subsystems.Drivetrain;
 public class Robot extends RobotBase {
 
   private int mode = 0;
-  private RoutineBase[] disabledRoutines = new RoutineBase[0];
-  private RoutineBase[] autonomousRoutines = new RoutineBase[0];
-  private RoutineBase[] teleopRoutines = new RoutineBase[0];
+  private Routine[] disabledRoutines = new Routine[0];
+  private Routine[] autonomousRoutines = new Routine[0];
+  private Routine[] teleopRoutines = new Routine[0];
+  private Routine[] enabledRoutines = new Routine[0];
 
 
   public void robotInit() {
@@ -33,24 +34,54 @@ public class Robot extends RobotBase {
     DriverRoutine.inst();
 
     // declare routine groups here
-    teleopRoutines = {DriverRoutine.act};
+    teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, DriverRoutine.act);
   }
   public void robotPeriodic() {
+    // subsystems update
     Drivetrain.update();
+
+    // custom code
+    
   }
 
-  public void disabledInit() {}
-  public void disabledPeriodic() {}
+  public void disabledInit() {
+    Scheduler.removeRoutines(autonomousRoutines);
+    Scheduler.removeRoutines(teleopRoutines);
+    Scheduler.removeRoutines(enabledRoutines);
+    Scheduler.addRoutines(disabledRoutines);
+    // custom init code after scheduler calls
 
-  public void autonomousInit() {}
-  public void autonomousPeriodic() {}
+  }
+  public void disabledPeriodic() {
+    // custom code here
+    
+  }
 
-  public void teleopInit() {}
-  public void teleopPeriodic() {}
+  public void autonomousInit() {
+    Scheduler.removeRoutines(disabledRoutines);
+    Scheduler.removeRoutines(teleopRoutines);
+    Scheduler.addRoutines(enabledRoutines);
+    Scheduler.addRoutines(autonomousRoutines);
+    // custom init code after scheduler calls
+    
+  }
+  public void autonomousPeriodic() {
+    // custom code here
+    
+  }
 
-  public void test() {}
+  public void teleopInit() {
+    Scheduler.removeRoutines(disabledRoutines);
+    Scheduler.removeRoutines(autonomousRoutines);
+    Scheduler.addRoutines(enabledRoutines);
+    Scheduler.addRoutines(teleopRoutines);
+    // custom init code after scheduler calls
+    
+  }
+  public void teleopPeriodic() {
+    // custom code here
 
-
+  }
 
   private volatile boolean m_exit;
   @Override
