@@ -27,8 +27,8 @@ import static frc.robot.Utils.*;
 public final class Constants {
     /** the indexes to address buttons on the controller */
     public static final class ControllerConstants {
-        public static final Joystick driverController = new Joystick(0);
-        public static final Joystick manipulatorController = new Joystick(1);
+        public static final Joystick kDriverController = new Joystick(0);
+        public static final Joystick kManipulatorController = new Joystick(1);
 
         public static final int kLeftVertical = 1;
         public static final int kRightVertical = 5;
@@ -57,6 +57,8 @@ public final class Constants {
         public static final double mountAngle = 41; //43 
         /** the math for calculating the distance to the target */
         public static final doubAlg distALG = (double ty) -> {return (targetHeight-mountHeight)/Math.tan(Math.PI*((mountAngle+ty)/180));};
+        public static final int kDefaultPipeline = 0;
+        public static final double kAimTolerance = 1.2;
     }
 
     /** shooting system constants */
@@ -120,6 +122,7 @@ public final class Constants {
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
         public static final double[] kDrivePowers = {0.0,0.12,0.9,1,1,1};
         public static final double kAutoDriveSmoothing = 0.065;
+        public static final double kIntegralTurnDecay = 0.9;
 
         // ahhh idek what im doing
         public static final PIDController ltPID = new PIDController(0.02, 0.055, 0.0058);

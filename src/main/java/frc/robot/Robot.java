@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Routines.DriverRoutine;
 import frc.robot.Routines.Routine;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.LimeLight;
 
 /**
  * The Routine-Based Main Robot Class
@@ -30,6 +31,7 @@ public class Robot extends RobotBase {
   public void robotInit() {
     // init subsystems here
     Drivetrain.init();
+    LimeLight.init();
 
     // instance routines here
     DriverRoutine.inst();
@@ -43,6 +45,7 @@ public class Robot extends RobotBase {
   public void robotPeriodic() {
     // subsystems update
     Drivetrain.update();
+    LimeLight.update();
 
     // custom code
     
