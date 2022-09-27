@@ -30,13 +30,14 @@ public class DriverRoutine extends Routine {
     @Override
     public void begin() {
         System.out.println("Driver Routine Starting");
+        Drivetrain.setHighGear(false);
         running = true; // be sure to set running true
     }
 
     @Override
     public void exec() {
         double contDrive = controller.getRawAxis(kLeftVertical); // very simple, just an example
-        double contTurn = controller.getRawAxis(kRightHorizontal);
+        double contTurn = -controller.getRawAxis(kRightHorizontal);
 
         Drivetrain.arcadeDrive(contDrive, contTurn);
     }
@@ -44,6 +45,6 @@ public class DriverRoutine extends Routine {
     @Override
     public void end() {
         System.out.println("Driver Routine Ending");
-        running = false; // be sure to set runnning true
+        running = false; // be sure to set runnning false
     }
 }

@@ -51,8 +51,11 @@ public class Scheduler {
     private static void removeRoutineAtIndex(int rem) {
         routineList[rem].end();
         Routine[] res = new Routine[routineList.length - 1];
-        Routine[] low = Arrays.copyOfRange(routineList, 0, rem - 1);
-        Routine[] high = Arrays.copyOfRange(routineList, rem + 1, routineList.length - 1);
+        Routine[] low = new Routine[0];
+        if (rem > 0) low = Arrays.copyOfRange(routineList, 0, rem - 1);
+        Routine[] high = new Routine[0];
+        if (rem < routineList.length-1) Arrays.copyOfRange(routineList, rem + 1, routineList.length - 1);
+        
         for (int i = 0; i < routineList.length - 1; i++) {
             if (i < rem)
                 res[i] = low[i];
