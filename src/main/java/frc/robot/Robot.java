@@ -34,10 +34,10 @@ public class Robot extends RobotBase {
     LimeLight.init();
 
     // instance routines here
-    DriverRoutine.inst();
+    new DriverRoutine();
 
     // declare routine groups here
-    teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, DriverRoutine.act); // add each new routine like this
+    teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, DriverRoutine.inst); // add each new routine like this
 
     Scheduler.addRoutines(universalRoutines);
   }

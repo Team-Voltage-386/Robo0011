@@ -11,7 +11,7 @@ import frc.robot.Subsystems.LimeLight;
 public class DriverRoutine extends Routine {
 
     /** variable to hold instance or "active" object */
-    public static DriverRoutine act;
+    public static DriverRoutine inst;
 
     private boolean highGear = false;
     private double finalDrive = 0;
@@ -20,18 +20,11 @@ public class DriverRoutine extends Routine {
     private double lastTurn = 0;
 
     public DriverRoutine() {
+        // instance this code to make sure it only exists once
+        if (inst == null) inst = this;
+
         this.execOrder = 1; // set execution order
         this.info = "Routine that handles driver input"; // give title
-    }
-
-    /**
-     * use in every routine that shouldn't have more than one running at once ever,
-     * is an instancer
-     */
-    public static void inst() {
-        if (act == null) {
-            act = new DriverRoutine();
-        }
     }
 
     @Override
