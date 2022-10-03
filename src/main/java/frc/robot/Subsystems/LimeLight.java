@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.LimeLightConstants;
 import static frc.robot.Constants.LimeLightConstants.*;
@@ -21,6 +22,7 @@ public class LimeLight {
     private static final Timer timer = new Timer();
 
     public static void init() {
+        llTable = NetworkTableInstance.getDefault().getTable("limelight");
         timer.start();
         driverMode(false);
         setPipeLine(kDefaultPipeline);
