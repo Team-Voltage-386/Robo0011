@@ -6,6 +6,7 @@ import static frc.robot.Constants.DriveConstants.*;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Utils;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Launcher;
 import frc.robot.Subsystems.LimeLight;
 
 public class DriverRoutine extends Routine {
@@ -19,12 +20,13 @@ public class DriverRoutine extends Routine {
     private double integralTurnAdjust = 0;
     private double lastTurn = 0;
 
+
     public DriverRoutine() {
         // instance this code to make sure it only exists once
         if (inst == null) inst = this;
 
         this.execOrder = 1; // set execution order
-        this.info = "Routine that handles driver input"; // give title
+        this.info = "Driver Routine: handles driver input"; // give title
     }
 
     @Override
@@ -71,8 +73,11 @@ public class DriverRoutine extends Routine {
                 ltPID.reset();
                 finalTurn = 0;
             } else finalTurn = ltALG.get(LimeLight.tx);
-        } else ltPID.reset();
-
+            if (Math.abs(LimeLight.tx) < 1.2) Launcher.robotAligned = true;
+        } else  {
+            Launcher.robotAligned = false;
+            ltPID.reset();
+        }
         // output final drive
         Drivetrain.arcadeDrive(finalDrive, finalTurn);
     }
@@ -81,5 +86,6 @@ public class DriverRoutine extends Routine {
     public void end() {
         System.out.println("Driver Routine Ending");
         running = false; // be sure to set runnning false
+        Launcher.robotAligned = false;
     }
 }

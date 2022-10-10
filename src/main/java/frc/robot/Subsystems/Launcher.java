@@ -45,6 +45,7 @@ public class Launcher {
 
     // Public values
     public static boolean fireTheBigIron = false;
+    public static boolean robotAligned = false;
     public static boolean drumControllerOn = false;
     public static boolean complianceOverride = false;
     public static boolean climbing = false;
@@ -167,7 +168,7 @@ public class Launcher {
     /** Checks for proper alignment, drumspeed, and hood position
      * @return whether or not the robot is completely ready to fire
      */
-    public boolean readyToFire() {
+    public static boolean readyToFire() {
         return Math.abs(drumSP - drumCurrentSpeed) < kDrumSpeedTolerance && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
     }
 
@@ -177,7 +178,7 @@ public class Launcher {
      * Refresh the intake logic, sets intake in/out and controls compliance
      * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k); inside the {@link frc.robot.commands.M_Teleop} command
      */
-    public void intakeUpdate(boolean b) {
+    public static void intakeUpdate(boolean b) {
         if (b) {
             if (!intakeOut) {
                 intakeOut = true;
@@ -192,7 +193,7 @@ public class Launcher {
                 intakeBackward.set(kGo);
             }
         } else if (t.hasElapsed(1)) {
-            if (Flags.complianceOverride) {
+            if (complianceOverride) {
                 intakeForward.set(kGo);
                 intakeBackward.set(kVent);
             } else {
@@ -305,7 +306,7 @@ public class Launcher {
      */
     private static void runFeedBelt() {
         if (fireTheBigIron) { // if firing, run belt as long as the robot is ready to fire
-            if (readyToFire() && Flags.hoopLocked) {
+            if (readyToFire() && robotAligned) {
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower); 
             } else beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 0) {
@@ -394,6 +395,26 @@ public class Launcher {
                 }
             } else beltMotor.set(ControlMode.PercentOutput, 0);  
             if (!breachSensorFlag) beltMotor.set(ControlMode.PercentOutput, kBeltPower); // make sure balls are wound up and in firing position
-    } 
-}
+        } 
+    }
+
+    /**prepares ball chute for next shot*/
+    public static void reLoad() {
+        ball1Col = ball2Col;
+        if (ballCount > 1) {
+            ball2Col = "null";
+            ballOnTheWay = true;
+        }
+        ballCount = 0;
+    }
+    
+    /** get the color of the ball; does not work with enough accuracy; ball color isn't used anywhere
+     * @return a string for the color, "Blue" or "Red"
+     */
+    private static String getColor() {
+        double b = intakeSensor.getBlue();
+        double r = intakeSensor.getRed();
+        if (b > r) return "Blue";
+        return "Red";
+    }
 }
