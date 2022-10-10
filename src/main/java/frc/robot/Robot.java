@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Routines.DriverRoutine;
 import frc.robot.Routines.Routine;
@@ -26,8 +27,7 @@ public class Robot extends RobotBase {
   private Routine[] enabledRoutines = new Routine[0];
   private Routine[] universalRoutines = new Routine[0];
 
-
-  /** run on boot */
+  /** run on code start */
   public void robotInit() {
     // init subsystems here
     Drivetrain.init();
