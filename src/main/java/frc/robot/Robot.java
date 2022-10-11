@@ -5,11 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.hal.HAL;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Routines.DriverRoutine;
+import frc.robot.Routines.ManipulatorRoutine;
 import frc.robot.Routines.Routine;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Launcher;
 import frc.robot.Subsystems.LimeLight;
 
 /**
@@ -32,12 +33,14 @@ public class Robot extends RobotBase {
     // init subsystems here
     Drivetrain.init();
     LimeLight.init();
+    Launcher.init();
 
     // instance routines here
     new DriverRoutine();
 
     // declare routine groups here
     teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, DriverRoutine.inst); // add each new routine like this
+    teleopRoutines = Scheduler.addRoutineArray(teleopRoutines, ManipulatorRoutine.inst);
 
     Scheduler.addRoutines(universalRoutines);
   }
@@ -46,6 +49,7 @@ public class Robot extends RobotBase {
     // subsystems update
     Drivetrain.update();
     LimeLight.update();
+    Launcher.update();
 
     // custom code
     

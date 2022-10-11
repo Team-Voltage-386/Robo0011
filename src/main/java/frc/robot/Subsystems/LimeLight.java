@@ -45,7 +45,7 @@ public class LimeLight {
     }
 
     /**Returns the meters to the target given the target's height from the ground*/
-    public double metersToTarget() {
+    public static double metersToTarget() {
         return distALG.get(ty);
     }
 

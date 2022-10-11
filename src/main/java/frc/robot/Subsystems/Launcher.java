@@ -90,7 +90,7 @@ public class Launcher {
     }
 
     /** blanket reset */
-    public void reset() {
+    public static void reset() {
         dPID.reset();
         hPID.reset();
         beltTimer.stop();
@@ -144,7 +144,7 @@ public class Launcher {
         }
     }
 
-    public void afterFiring() {
+    public static void afterFiring() {
         ballCount = 0;
         drumIdle = false;
         ballOnTheWay = false;
@@ -210,7 +210,7 @@ public class Launcher {
      * @param m the distance to the target in meters as reported by the limelight
      * @author Carl C.
      */
-    public void setAimDistance(double m) {
+    public static void setAimDistance(double m) {
         int i = ShooterData.distances.length-1;
         for (int j = 1; j < ShooterData.distances.length; j++) {
             if (m < ShooterData.distances[j]) {

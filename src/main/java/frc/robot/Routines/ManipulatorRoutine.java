@@ -1,12 +1,15 @@
 package frc.robot.Routines;
 
 import frc.robot.Subsystems.Launcher;
+import frc.robot.Subsystems.LimeLight;
+
 import static frc.robot.Constants.ControllerConstants.*;
 
 public class ManipulatorRoutine extends Routine {
     public static ManipulatorRoutine inst;
     private boolean climbActive = false;
     private boolean sentUp = false;
+    private boolean lastCycleTrigger = false;
 
     public ManipulatorRoutine() {
         if (inst == null) inst = this;
@@ -23,6 +26,7 @@ public class ManipulatorRoutine extends Routine {
         Launcher.drumIdle = false;
         sentUp = true; // I thought this was set false at init? idk why it works if this is true
         //_bss.intakeUpdate(!_bss.intakeOut);
+        lastCycleTrigger = false;
     }
 
     @Override
@@ -31,12 +35,17 @@ public class ManipulatorRoutine extends Routine {
     if(kManipulatorController.getRawButtonPressed(kA)) Launcher.drumIdle = Launcher.drumIdle; // toggle drum idle
     Launcher.intakeUpdate(kManipulatorController.getRawButtonPressed(kRightBumper)); // deploy/retract/release intake
     if (kManipulatorController.getRawButtonPressed(kLeftBumper)) Launcher.lowShot = !Launcher.lowShot;
-    if (triggerReleased(kRightTrigger)) _bss.afterFiring();
-    if (triggerPressed(kRightTrigger)) _bss.fireTheBigIron = true; // begin targeting if rt is pressed
-    hoopTargeted = _bss.fireTheBigIron;
 
-    if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
+    boolean trigger = kManipulatorController.getRawAxis(kRightTrigger) > 0.5;
+    if (!trigger && lastCycleTrigger) Launcher.afterFiring();
+    if (trigger && !lastCycleTrigger) Launcher.fireTheBigIron = true; // begin targeting if rt is pressed
+
+    lastCycleTrigger = trigger;
+
+    if (Launcher.fireTheBigIron) Launcher.setAimDistance(LimeLight.metersToTarget());
+
+    /*
     // elevator logic
     if (climbActive) {
       if (sentUp) _kss.setElePower(-0.85* Math.pow(_controller.getRawAxis(kRightVertical),3));
@@ -50,14 +59,15 @@ public class ManipulatorRoutine extends Routine {
     } else {
       _kss.setElePower(0);
       sentUp = false;
-    }
+    }*/
 
-    if (_controller.getRawButtonPressed(kB)) _bss.decreaseBC();
-    if (_controller.getRawButtonPressed(kY)) _bss.increaseBC();
+    if (kManipulatorController.getRawButtonPressed(kB)) Launcher.decreaseBC();
+    if (kManipulatorController.getRawButtonPressed(kY)) Launcher.increaseBC();
 
-    if (_controller.getRawButtonPressed(kX)) climbActive = !climbActive;
-    if (_controller.getRawButtonPressed(kRightJoystickPressed)) _bss.reset();
-    _bss.climbing = climbActive;
+    if (kManipulatorController.getRawButtonPressed(kX)) climbActive = !climbActive;
+    if (kManipulatorController.getRawButtonPressed(kRightJoystickPressed)) Launcher.reset();
+    Launcher.climbing = climbActive;
+
     }
 
     @Override 
